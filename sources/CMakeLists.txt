@@ -27,6 +27,21 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)
 
 #
+# Get animation-lib
+#
+
+set(ANIM_BUILD_TESTS OFF)
+
+message(STATUS "Fetching animation-lib...")
+
+FetchContent_Declare(
+   animation
+   GIT_REPOSITORY https://github.com/marktmcmanus/animation-lib.git
+   GIT_TAG main
+)
+FetchContent_MakeAvailable(animation)
+
+#
 # weather library
 #
 
