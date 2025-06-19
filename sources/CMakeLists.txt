@@ -53,6 +53,8 @@ set(SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/MainFrame.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/TileSettingsDlg.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/TileSettingsDlg.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/SelectLocationDlg.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/SelectLocationDlg.cpp"
     )
 
 if(APPLE)

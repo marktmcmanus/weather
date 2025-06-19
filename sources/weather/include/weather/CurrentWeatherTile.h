@@ -27,7 +27,7 @@ namespace weather
             bool celsius = true;
         };
 
-		CurrentWeatherTile(wxWindow* parent, wxString location, WeatherAPI& weatherAPI, const Settings& settings = {});
+		CurrentWeatherTile(wxWindow* parent, WeatherAPI& weatherAPI, const Settings& settings = {});
 		virtual ~CurrentWeatherTile();
 
         void SetSettings(const Settings& settings);

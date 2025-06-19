@@ -1,5 +1,6 @@
 #include "MainFrame.h"
 #include "TileSettingsDlg.h"
+#include "SelectLocationDlg.h"
 
 #include <wx/clipbrd.h>
 #include <wx/textfile.h>
@@ -21,7 +22,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
 
-    m_CurrentWeatherTile = new weather::CurrentWeatherTile(this, "Halifax", *m_WeatherAPI, m_TileSettings);
+    m_CurrentWeatherTile = new weather::CurrentWeatherTile(this, *m_WeatherAPI, m_TileSettings);
     sizer->Add(m_CurrentWeatherTile, 0, wxALL, 10);
 
     CreateMenuBar();
@@ -79,10 +80,14 @@ void MainFrame::DoTileSettings()
 
 void MainFrame::DoLocation()
 {
-    wxString location = wxGetTextFromUser("Enter a location:", "Location", m_CurrentWeatherTile->GetLocation());
-    if (!location.IsEmpty())
+    SelectLocationDlg dlg(this, *m_WeatherAPI.get());
+    if (dlg.ShowModal() == wxID_OK)
     {
-         m_CurrentWeatherTile->SetLocation(location);
+        if (auto selOpt = dlg.GetSelectedLocation(); selOpt.has_value())
+        {
+            std::string locStr = std::format("id:{}", selOpt->id);
+            m_CurrentWeatherTile->SetLocation(locStr);
+        }
     }
 }
 

@@ -21,6 +21,11 @@ namespace weather
         using ForecastCallback = std::function<void(const weather::Forecast& forecast, const weather::Current& currentWeather, const weather::Location& location)>;
         bool GetForecast(const std::string& location, int days, ForecastCallback callback);
 
+        using SearchLocationCallback = std::function<void(const std::vector<weather::SearchLocation>& locations )>;
+        bool SearchLocation(const std::string& query, SearchLocationCallback callback);
+
+        //bool IPLookup();
+
     private:
         std::string m_ApiKey;
     };

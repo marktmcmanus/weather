@@ -2,9 +2,8 @@
 
 #include <wx/wx.h>
 
-weather::CurrentWeatherTile::CurrentWeatherTile(wxWindow* parent, wxString location, WeatherAPI& weatherAPI, const Settings& settings) :
+weather::CurrentWeatherTile::CurrentWeatherTile(wxWindow* parent, WeatherAPI& weatherAPI, const Settings& settings) :
     wxPanel(parent, wxID_ANY),
-    m_Location(location),
     m_WeatherAPI(weatherAPI),
     m_Settings(settings)
 {
@@ -52,7 +51,13 @@ void weather::CurrentWeatherTile::SetLocation(const wxString& location)
 
 void weather::CurrentWeatherTile::UpdateWeatherInfo()
 {
-    m_WeatherAPI.GetForecast(m_Location.ToStdString(), 1, [this](const weather::Forecast& forecast, const weather::Current& curr, const weather::Location& location) {
+    std::string loc = m_Location.ToStdString();
+    if( loc.empty())
+    {
+        loc = "auto:ip"; // Default to auto-detect location
+    }
+
+    m_WeatherAPI.GetForecast(loc, 1, [this](const weather::Forecast& forecast, const weather::Current& curr, const weather::Location& location) {
 
         if (m_TemperatureLabel != nullptr)
         {

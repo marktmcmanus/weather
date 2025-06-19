@@ -6,6 +6,24 @@
 
 namespace weather
 {
+    struct SearchLocation
+    {
+        int id;
+        std::string name;
+        std::string region;
+        std::string country;
+        double lat;
+        double lon;
+        std::string url;
+    };
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SearchLocation, id, name, region, country, lat, lon, url);
+
+    //struct SearchResults
+    //{
+    //    std::vector<weather::SearchLocation> locations;
+    //};
+    //NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SearchResults, locations);
+
     struct Location
     {
         std::string name;
