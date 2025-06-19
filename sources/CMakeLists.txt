@@ -21,8 +21,25 @@ FetchContent_MakeAvailable(wxWidgets)
 # Get nlohmann/json
 #
 
+message(STATUS "Fetching nlohmann/json...")
+
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
 FetchContent_MakeAvailable(json)
+
+#
+# Get animation-lib
+#
+
+set(ANIM_BUILD_TESTS OFF)
+
+message(STATUS "Fetching animation-lib...")
+
+FetchContent_Declare(
+   animation
+   GIT_REPOSITORY https://github.com/marktmcmanus/animation-lib.git
+   GIT_TAG main
+)
+FetchContent_MakeAvailable(animation)
 
 #
 # weather library
@@ -47,22 +64,24 @@ target_link_libraries("${PROJECT_NAME}" PUBLIC nlohmann_json::nlohmann_json)
 # weather.test app
 #
 
-set(SRCS 
-    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/main.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/MainFrame.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/MainFrame.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/TileSettingsDlg.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/TileSettingsDlg.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/SelectLocationDlg.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/SelectLocationDlg.cpp"
-    )
+if(WEATHER_BUILD_TESTS)
+    set(SRCS 
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/main.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/MainFrame.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/MainFrame.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/TileSettingsDlg.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/TileSettingsDlg.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/SelectLocationDlg.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/SelectLocationDlg.cpp"
+        )
 
-if(APPLE)
-	add_executable("${PROJECT_NAME}.test" MACOSX_BUNDLE ${SRCS})
-    set_target_properties("${PROJECT_NAME}.test" PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/Info.plist)
-else()
-	add_executable("${PROJECT_NAME}.test" WIN32 ${SRCS} "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/main.exe.manifest" )
+    if(APPLE)
+	    add_executable("${PROJECT_NAME}.test" MACOSX_BUNDLE ${SRCS})
+        set_target_properties("${PROJECT_NAME}.test" PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/Info.plist)
+    else()
+	    add_executable("${PROJECT_NAME}.test" WIN32 ${SRCS} "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.test/main.exe.manifest" )
+    endif()
+
+    target_compile_definitions("${PROJECT_NAME}.test" PUBLIC WIN32_LEAN_AND_MEAN)
+    target_link_libraries("${PROJECT_NAME}.test" PRIVATE "${PROJECT_NAME}" wxcore wxnet animation-lib)
 endif()
-
-target_compile_definitions("${PROJECT_NAME}.test" PUBLIC WIN32_LEAN_AND_MEAN)
-target_link_libraries("${PROJECT_NAME}.test" PRIVATE "${PROJECT_NAME}" wxcore wxnet )
